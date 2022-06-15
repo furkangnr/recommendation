@@ -1,0 +1,45 @@
+# ABSTRACT 
+
+In this project, Association Rule Based machine learning approach developed for recommending related products to the customers by cheking items in the cart.
+Apriori and Association Rules algorithms  used for obtaining item-to-item interactions / support of each item among total transactions / lift and confidence scores of each item combinations etc.
+Data is grouped by "sessionid" feature so that we can accumulate products added to the cart in the same transaction. 
+By using one-hot encoded transaction data, product combinations obtained. After that, these combinations sorted by "support" and "lift" scores respectively.
+Finally, a main dataframe is obtained which stores 3 top recommendations for each product. Since some products did not have combinations with other products, they were removed from this main dataframe.
+As for deployment, 2 objects persisted which are main dataframe and outliers respectively. 
+
+
+# PROS
+
+This approach is simple yet intuitive. It is easy to understand relationship between products via looking through support, lift and confidence scores.
+
+For this reason, it requires relatively smaller development time which shortens the path to the production.
+
+# CONS
+
+This approach is computationally expensive. For this reason, I decided to gather only 3 recommendations for each product. If I would rather choose to obtain 10 product recommendations for each, it would take at least a week
+considering 8GB RAM in my computer. Thus, for cart scenarios having lesser than 4 items ( which basically consists of almost %60 of total transactions, we can not manage to obtain top 10 recommendations, instead we obtain 
+n_items * 3 -- considering each recommendation is not included in the cart already and each recommendation different from each other -- best scenario )
+
+Another drawback  due to the computatinal needs is, combinations that have only 2 pairs considered. There may be information loss due to this. In other words, if we look combinations above 2 pairs such as 3 pairs 4 pairs 
+we can obtain a huge dataframe consisting of item combinations which will make the situation more complex. 
+
+One major drawback is also coming from the "support" term. This approach somehow prunes products that have smaller support values which cause information loss too. On the other hand, we can conclude that for products having
+high support values, this approach provides a "confidence" and "lift" scores. Thus, helps us to determine which item to recommend better. Those high support products sometimes included in the recommended items for low support items
+although they seem not to much correlated.(lower lift score).
+
+
+
+# POTENTIAL & DIFFERENT APPROACHES
+
+For outlier products ( products that have no combinations with other products in given data ), we can study "subcategory" and "category" relationships between items. Thus, we could obtain top selling products in given
+"subcategory" and/or "category" and recommend those popular items to outlier products.
+
+If we can merge user data into existing data, we can study customer segmentation before. By doing this, we can recommend different products to customers who are in different segments although they added exactly same items to the cart.
+
+Approch used in this project is a rule-based technique. Sometimes it is better to use techniques like that before diving into the advanced ones. However, in the literature there are studies, talks about how Collaborative Filtering
+is used for item-to-item recommendations. In that sense, we may  obtain latent representations of products via using feature extractors and then we can use neighbors/clustering based algorithms in order to obtain nearest 
+products for each products etc.
+
+One approach also can be using Content Based approach using category and subcategory informations of the products.
+
+
